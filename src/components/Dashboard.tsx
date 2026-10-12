@@ -25,6 +25,7 @@ import { TRANSLATIONS } from '../i18n/translations';
 import { QuestionCard } from './QuestionCard';
 import { AudioControls } from './AudioControls';
 import { speechManager } from '../utils/audio';
+import { generateAlgorithmicQuestions } from '../utils/mathEngine';
 
 interface DashboardProps {
   language: Language;
@@ -140,9 +141,24 @@ export const Dashboard: React.FC<DashboardProps> = ({ language, user }) => {
           timestamp: new Date().toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit' }),
         };
         setHistory((prev) => [newHistoryItem, ...prev.slice(0, 9)]);
+      } else {
+        throw new Error('API response invalid, using math engine');
       }
     } catch (err) {
-      console.error('Failed to generate questions:', err);
+      console.warn('Fallback to built-in high-accuracy math engine:', err);
+      const fallbackQuestions = generateAlgorithmicQuestions(grade, subject, topic, finalCount, language);
+      setQuestions(fallbackQuestions);
+      const newHistoryItem: QuestionHistoryItem = {
+        id: `hist_${Date.now()}`,
+        grade,
+        subject,
+        topic,
+        count: fallbackQuestions.length,
+        mode,
+        questions: fallbackQuestions,
+        timestamp: new Date().toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit' }),
+      };
+      setHistory((prev) => [newHistoryItem, ...prev.slice(0, 9)]);
     } finally {
       setLoading(false);
     }
