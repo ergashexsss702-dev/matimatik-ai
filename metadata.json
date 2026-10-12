@@ -1,0 +1,6 @@
+{
+  "name": "Savollarni javobi bilan",
+  "description": "Matematika va algebra fanlaridan 1-11 sinflar uchun savollar, javoblar, bosqichma-bosqich yechimlar va ovozli eshitish platformasi.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
